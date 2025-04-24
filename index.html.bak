@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cobracut</title>
+  
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const countEl = document.getElementById('cart-count-number');
+      if (countEl) countEl.textContent = cart.length;
+    });
+  </script>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <a href="index.html">
+        <img src="images/Cobracut Logo - grey.png" alt="Cobracut Logo" class="logo" />
+      </a>
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="apparel.html">Apparel</a></li>
+        <li><a href="headwear.html">Headwear</a></li>
+        <li><a href="accessories.html">Accessories</a></li>
+        <li><a href="homeware.html">Homeware</a></li>
+        <li><a href="teamshops.html">Team Shops</a></li>
+        <li class="dropdown">
+          <a href="#">Account</a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Register</a></li>
+            <li><a href="#">My Account</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+	<section class="delivery-notice">
+	  <h2>Please allow up to 28 days for delivery of customised items</h2>
+	</section>
+
+    <div class="carousel-images" id="carouselImages">
+      <a href="apparel.html"><img src="images/header1.png" alt="Section 1"></a>
+      <a href="blankets.html"><img src="images/header2.png" alt="Section 2"></a>
+      <a href="headwear.html"><img src="images/header3.png" alt="Section 3"></a>
+    </div>
+
+    <div class="dots" id="dots">
+      <div class="dot active" onclick="goToSlide(0)"></div>
+      <div class="dot" onclick="goToSlide(1)"></div>
+      <div class="dot" onclick="goToSlide(2)"></div>
+    </div>
+
+    <section class="about-us">
+      <h2>About Us</h2>
+      <div class="about-content">
+        <img src="images/Cobracut Logo - dark.png" alt="About Us Image" />
+        <div class="about-text">
+          <p>
+            Welcome to Cobracut, your go-to destination for high-quality, custom-branded merchandise. We specialise in creating stylish, practical, and memorable products that help individuals and businesses bring their brand to life.
+
+            From mugs, hats, t-shirts, and jerseys to blankets and so much more – Cobracut is proud to offer a wide selection of merchandise designed with care, creativity, and attention to detail. Whether you're looking to kit out a sports team, launch a promotional campaign, or simply treat your supporters to something special, we’ve got you covered.
+
+            At Cobracut, we blend quality materials with sharp design and a passion for delivering items that people genuinely want to wear and use. No gimmicks – just well-crafted gear that makes an impression.
+
+            Join the growing community of brands, teams, and fans who trust Cobracut to deliver merch that stands out.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="newsletter-section">
+      <h2>Subscribe to our newsletter</h2>
+      <p>Signup to receive news and updates</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Email Address" required />
+        <button type="submit">Join</button>
+      </form>
+    </section>
+
+    <section class="footer-icons">
+	  <div class="social-media">
+		<a href="https://www.facebook.com" target="_blank" aria-label="Facebook">
+		  <i class="fab fa-facebook-f"></i>
+		</a>
+		<a href="https://www.instagram.com" target="_blank" aria-label="Instagram">
+		  <i class="fab fa-instagram"></i>
+		</a>
+		<a href="https://www.x.com" target="_blank" aria-label="X">
+		  <i class="fab fa-x-twitter"></i>
+		</a>
+	  </div>
+
+	  <div class="payment-icons">
+		<i class="fab fa-cc-apple-pay" aria-label="Apple Pay"></i>
+		<i class="fab fa-cc-paypal" aria-label="PayPal"></i>
+		<i class="fab fa-cc-visa" aria-label="Visa"></i>
+		<i class="fab fa-cc-mastercard" aria-label="Mastercard"></i>
+		<i class="fab fa-google-pay" aria-label="Google Pay"></i>
+	  </div>
+	</section>
+
+    <script src="index.js"></script>
+  </main>
+
+</body>
+</html>
