@@ -22,6 +22,20 @@
     "team": "Cobracut"
   },
   {
+    "id": "4",
+    "name": "Team Cobra Deskpad - 90x40cm",
+    "price": 12.00,
+    "image": "assets/images/deskpad.png",
+    "team": "Cobracut"
+  },
+  {
+    "id": "5",
+    "name": "Team Cobra Deskpad Light - 90x40cm",
+    "price": 12.00,
+    "image": "assets/images/deskpad-light.png",
+    "team": "Cobracut"
+  },
+  {
     "id": "99",
     "name": "More Coming Soon",
     "price": 0,
