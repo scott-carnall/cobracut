@@ -57,7 +57,10 @@
   fetch('products.json')
     .then(res => res.json())
     .then(data => {
-      const featured = getRandomItems(data, 3);
+      // Exclude item with ID "99"
+      const filtered = data.filter(product => product.id !== "99");
+
+      const featured = getRandomItems(filtered, 3);
       const container = document.getElementById('featured-items');
 
       featured.forEach(product => {
@@ -79,6 +82,7 @@
       console.error("Failed to load featured items:", err);
     });
 </script>
+
 
 </body>
 </html>
