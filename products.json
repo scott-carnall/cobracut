@@ -1,0 +1,31 @@
+
+[
+  {
+    "id": "1",
+    "name": "Team Cobra Jersey",
+    "price": 25.00,
+    "image": "assets/images/jersey1.png",
+    "team": "Cobracut"
+  },
+  {
+    "id": "2",
+    "name": "Team Cobra Tee",
+    "price": 15.00,
+    "image": "assets/images/cobracuttshirt.png",
+    "team": "Cobracut"
+  },
+    {
+    "id": "3",
+    "name": "Team Cobra Cushions",
+    "price": 11.00,
+    "image": "assets/images/cushions.png",
+    "team": "Cobracut"
+  },
+  {
+    "id": "99",
+    "name": "More Coming Soon",
+    "price": 0,
+    "image": "assets/images/coming-soon.jpg",
+    "team": "Coming Soon"
+  }
+]

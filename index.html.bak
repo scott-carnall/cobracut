@@ -2,118 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cobracut</title>
-  
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <script defer>
-    document.addEventListener('DOMContentLoaded', () => {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const countEl = document.getElementById('cart-count-number');
-      if (countEl) countEl.textContent = cart.length;
-    });
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home – Cobracut</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="js/store.js" defer></script>
 </head>
-<body>
+<body class="flex flex-col min-h-screen bg-white text-black">
+  
+<header class="bg-black text-white p-4 flex justify-between items-center">
+  <a href="index.html" class="h-20">
+    <img src="assets/images/logo.png" alt="Cobracut Logo" class="h-20 object-contain" />
+  </a>
+  <nav class="space-x-4">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart</a>
+  </nav>
+</header>
 
-  <header>
-    <div class="header-left">
-      <a href="index.html">
-        <img src="images/Cobracut Logo - grey.png" alt="Cobracut Logo" class="logo" />
-      </a>
-    </div>
+<div class="bg-gray-100 text-white text-center py-4">
+  <p class="text-sm sm:text-base">Items can take up to 28 days for delivery.</p>
+</div>
+
+
+  <main class="flex-grow py-10 px-6 max-w-5xl mx-auto">
+    <section class="text-center">
+      <h1 class="text-5xl font-bold mb-6">Welcome to Cobracut</h1>
+    </section>
+	<section class="bg-gray-100 text-center py-20 px-6">
+    <h1 class="text-4xl md:text-6xl font-bold">Custom Jerseys for Ball Hockey & Football Teams</h1>
+    <!-- <p class="mt-4 text-lg text-gray-700">Designed to win. Built for performance.</p> -->
+	<p class="mt-4 text-lg text-gray-700">Built to Strike. Designed to Dominate.</p>
+    <a href="shop.html" class="mt-6 inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">Shop Now</a>
+  </section>
+  <section class="py-16 px-6 max-w-6xl mx-auto">
+  <h2 class="text-2xl font-semibold mb-6">Featured Items</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
     
-    <nav class="main-nav">
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="apparel.html">Apparel</a></li>
-        <li><a href="headwear.html">Headwear</a></li>
-        <li><a href="accessories.html">Accessories</a></li>
-        <li><a href="homeware.html">Homeware</a></li>
-        <li><a href="teamshops.html">Team Shops</a></li>
-        <li class="dropdown">
-          <a href="#">Account</a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Register</a></li>
-            <li><a href="#">My Account</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-
-	<section class="delivery-notice">
-	  <h2>Please allow up to 28 days for delivery of customised items</h2>
-	</section>
-
-    <div class="carousel-images" id="carouselImages">
-      <a href="apparel.html"><img src="images/header1.png" alt="Section 1"></a>
-      <a href="blankets.html"><img src="images/header2.png" alt="Section 2"></a>
-      <a href="headwear.html"><img src="images/header3.png" alt="Section 3"></a>
-    </div>
-
-    <div class="dots" id="dots">
-      <div class="dot active" onclick="goToSlide(0)"></div>
-      <div class="dot" onclick="goToSlide(1)"></div>
-      <div class="dot" onclick="goToSlide(2)"></div>
-    </div>
-
-    <section class="about-us">
-      <h2>About Us</h2>
-      <div class="about-content">
-        <img src="images/Cobracut Logo - dark.png" alt="About Us Image" />
-        <div class="about-text">
-          <p>
-            Welcome to Cobracut, your go-to destination for high-quality, custom-branded merchandise. We specialise in creating stylish, practical, and memorable products that help individuals and businesses bring their brand to life.
-
-            From mugs, hats, t-shirts, and jerseys to blankets and so much more – Cobracut is proud to offer a wide selection of merchandise designed with care, creativity, and attention to detail. Whether you're looking to kit out a sports team, launch a promotional campaign, or simply treat your supporters to something special, we’ve got you covered.
-
-            At Cobracut, we blend quality materials with sharp design and a passion for delivering items that people genuinely want to wear and use. No gimmicks – just well-crafted gear that makes an impression.
-
-            Join the growing community of brands, teams, and fans who trust Cobracut to deliver merch that stands out.
-          </p>
-        </div>
+    <div class="border rounded-lg shadow-sm w-full h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+      <div class="flex-grow flex items-center justify-center">
+        <img src="assets/images/jersey1.png" alt="Cobracut Jersey" class="max-h-40 object-contain" />
       </div>
-    </section>
+      <div class="mt-4">
+        <h3 class="font-semibold text-lg">Cobracut Jersey</h3>
+        <p class="text-sm text-gray-600">£24.99</p>
+      </div>
+    </div>
 
-    <section class="newsletter-section">
-      <h2>Subscribe to our newsletter</h2>
-      <p>Signup to receive news and updates</p>
-      <form class="newsletter-form">
-        <input type="email" placeholder="Email Address" required />
-        <button type="submit">Join</button>
-      </form>
-    </section>
+    <div class="border rounded-lg shadow-sm w-full h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+      <div class="flex-grow flex items-center justify-center">
+        <img src="assets/images/cobracuttshirt.png" alt="Team Cobra Tee" class="max-h-40 object-contain" />
+      </div>
+      <div class="mt-4">
+        <h3 class="font-semibold text-lg">Team Cobra Tee</h3>
+        <p class="text-sm text-gray-600">£14.99</p>
+      </div>
+    </div>
 
-    <section class="footer-icons">
-	  <div class="social-media">
-		<a href="https://www.facebook.com" target="_blank" aria-label="Facebook">
-		  <i class="fab fa-facebook-f"></i>
-		</a>
-		<a href="https://www.instagram.com" target="_blank" aria-label="Instagram">
-		  <i class="fab fa-instagram"></i>
-		</a>
-		<a href="https://www.x.com" target="_blank" aria-label="X">
-		  <i class="fab fa-x-twitter"></i>
-		</a>
-	  </div>
+    <div class="border rounded-lg shadow-sm w-full h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+      <div class="flex-grow flex items-center justify-center">
+        <img src="assets/images/cushions.png" alt="Team Cobra Cushions" class="max-h-40 object-contain" />
+      </div>
+      <div class="mt-4">
+        <h3 class="font-semibold text-lg">Team Cobra Cushions</h3>
+        <p class="text-sm text-gray-600">£10.99</p>
+      </div>
+    </div>
 
-	  <div class="payment-icons">
-		<i class="fab fa-cc-apple-pay" aria-label="Apple Pay"></i>
-		<i class="fab fa-cc-paypal" aria-label="PayPal"></i>
-		<i class="fab fa-cc-visa" aria-label="Visa"></i>
-		<i class="fab fa-cc-mastercard" aria-label="Mastercard"></i>
-		<i class="fab fa-google-pay" aria-label="Google Pay"></i>
-	  </div>
-	</section>
+  </div>
+</section>
 
-    <script src="index.js"></script>
   </main>
-
+  <footer class="bg-black text-white text-center py-6">
+    <p>&copy; Cobracut 2025 – All rights reserved</p>
+  </footer>
 </body>
 </html>

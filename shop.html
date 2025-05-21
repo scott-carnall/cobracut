@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop - Cobracut</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-white text-gray-900">
+
+  <!-- Navbar -->
+  <header class="bg-black text-white p-4 flex justify-between items-center">
+    <a href="index.html" class="h-10">
+      <img src="assets/images/logo.png" alt="Cobracut Logo" class="h-10 object-contain" />
+    </a>
+    <nav class="space-x-4">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <!-- Delivery Banner -->
+  <div class="bg-gray-400 text-white text-center py-4">
+    <p class="text-sm sm:text-base">Items can take up to 28 days for delivery.</p>
+  </div>
+
+  <!-- Team Dropdown -->
+  <section class="max-w-7xl mx-auto px-6 mt-10">
+    <label for="team-select" class="block text-lg font-semibold mb-2">Select Team:</label>
+    <select id="team-select" class="border rounded px-4 py-2">
+      <option value="Cobracut">Cobracut</option>
+      <option value="AnotherTeam">AnotherTeam</option>
+    </select>
+  </section>
+
+  <!-- Product Grid -->
+  <section class="py-12 px-6 max-w-7xl mx-auto">
+    <h2 id="team-title" class="text-2xl font-semibold mb-6">Shop: Cobracut</h2>
+    <div id="product-grid" class="flex flex-wrap justify-center gap-6"></div>
+  </section>
+
+  <script>
+    const queryParams = new URLSearchParams(window.location.search);
+    let selectedTeam = queryParams.get("team") || "Cobracut";
+
+    document.getElementById("team-select").value = selectedTeam;
+
+    function loadProducts(team) {
+      fetch("products.json")
+        .then(res => res.json())
+        .then(products => {
+          const grid = document.getElementById("product-grid");
+          const title = document.getElementById("team-title");
+          title.textContent = `Shop: ${team}`;
+          grid.innerHTML = ""; // Clear previous items
+
+          const filtered = products.filter(p => p.team === team);
+
+          if (filtered.length === 0) {
+            grid.innerHTML = `
+              <div class="text-center text-gray-600 w-full">
+                <p>No items available for this team yet.</p>
+                <img src="assets/images/coming-soon.jpg" alt="Coming Soon" class="mx-auto mt-4 max-w-xs opacity-70" />
+              </div>
+            `;
+            return;
+          }
+
+          filtered.forEach(product => {
+            const card = document.createElement("div");
+            card.className = "border rounded-lg shadow-sm w-56 h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg";
+            card.innerHTML = `
+              <div class="flex-grow flex items-center justify-center">
+                <img src="${product.image}" alt="${product.name}" class="max-h-40 object-contain" />
+              </div>
+              <div class="mt-4">
+                <h3 class="font-semibold text-lg">${product.name}</h3>
+                <p class="text-sm text-gray-600">£${product.price.toFixed(2)}</p>
+              </div>
+            `;
+            grid.appendChild(card);
+          });
+
+          // Add placeholder cards if less than 5
+          if (filtered.length < 5) {
+            for (let i = filtered.length; i < 5; i++) {
+              const placeholder = document.createElement("div");
+              placeholder.className = "border rounded-lg shadow-sm w-56 h-80 p-4 flex flex-col justify-center items-center text-gray-400 bg-gray-100";
+              placeholder.innerHTML = `
+                <p class="text-center">More<br>Coming Soon</p>
+              `;
+              grid.appendChild(placeholder);
+            }
+          }
+        })
+        .catch(() => {
+          document.getElementById("product-grid").innerHTML = "<p class='text-red-600'>Failed to load products.</p>";
+        });
+    }
+
+    // Handle dropdown change
+    document.getElementById("team-select").addEventListener("change", function () {
+      const team = this.value;
+      window.location.href = `shop.html?team=${team}`;
+    });
+
+    loadProducts(selectedTeam);
+  </script>
+
+</body>
+</html>

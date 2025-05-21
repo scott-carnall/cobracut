@@ -1,0 +1,24 @@
+
+[
+  {
+    "id": "1",
+    "name": "Cobracut Home Jersey",
+    "price": 45.00,
+    "image": "assets/images/cobracut-jersey.jpg",
+    "team": "Cobracut"
+  },
+  {
+    "id": "2",
+    "name": "Cobracut Away Jersey",
+    "price": 45.00,
+    "image": "assets/images/cobracut-away.jpg",
+    "team": "Cobracut"
+  },
+  {
+    "id": "99",
+    "name": "More Coming Soon",
+    "price": 0,
+    "image": "assets/images/coming-soon.jpg",
+    "team": "Coming Soon"
+  }
+]
