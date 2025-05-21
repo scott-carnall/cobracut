@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home – Cobracut</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="js/store.js" defer></script>
 </head>
 <body class="flex flex-col min-h-screen bg-white text-black">
   
@@ -24,57 +23,62 @@
   <p class="text-sm sm:text-base">Items can take up to 28 days for delivery.</p>
 </div>
 
+<main class="flex-grow py-10 px-6 max-w-5xl mx-auto">
+  <section class="text-center">
+    <h1 class="text-5xl font-bold mb-6">Welcome to Cobracut</h1>
+  </section>
 
-  <main class="flex-grow py-10 px-6 max-w-5xl mx-auto">
-    <section class="text-center">
-      <h1 class="text-5xl font-bold mb-6">Welcome to Cobracut</h1>
-    </section>
-	<section class="bg-gray-100 text-center py-20 px-6">
+  <section class="bg-gray-100 text-center py-20 px-6">
     <h1 class="text-4xl md:text-6xl font-bold">Custom Jerseys for Ball Hockey & Football Teams</h1>
-    <!-- <p class="mt-4 text-lg text-gray-700">Designed to win. Built for performance.</p> -->
-	<p class="mt-4 text-lg text-gray-700">Built to Strike. Designed to Dominate.</p>
+    <p class="mt-4 text-lg text-gray-700">Built to Strike. Designed to Dominate.</p>
     <a href="shop.html" class="mt-6 inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">Shop Now</a>
   </section>
+
+  <!-- Featured Items -->
   <section class="py-16 px-6 max-w-6xl mx-auto">
-  <h2 class="text-2xl font-semibold mb-6">Featured Items</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-    
-    <div class="border rounded-lg shadow-sm w-full h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-      <div class="flex-grow flex items-center justify-center">
-        <img src="assets/images/jersey1.png" alt="Cobracut Jersey" class="max-h-40 object-contain" />
-      </div>
-      <div class="mt-4">
-        <h3 class="font-semibold text-lg">Cobracut Jersey</h3>
-        <p class="text-sm text-gray-600">£24.99</p>
-      </div>
+    <h2 class="text-2xl font-semibold mb-6">Featured Items</h2>
+    <div id="featured-items" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <!-- JS will inject featured products here -->
     </div>
+  </section>
+</main>
 
-    <div class="border rounded-lg shadow-sm w-full h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-      <div class="flex-grow flex items-center justify-center">
-        <img src="assets/images/cobracuttshirt.png" alt="Team Cobra Tee" class="max-h-40 object-contain" />
-      </div>
-      <div class="mt-4">
-        <h3 class="font-semibold text-lg">Team Cobra Tee</h3>
-        <p class="text-sm text-gray-600">£14.99</p>
-      </div>
-    </div>
+<footer class="bg-black text-white text-center py-6">
+  <p>&copy; Cobracut 2025 – All rights reserved</p>
+</footer>
 
-    <div class="border rounded-lg shadow-sm w-full h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-      <div class="flex-grow flex items-center justify-center">
-        <img src="assets/images/cushions.png" alt="Team Cobra Cushions" class="max-h-40 object-contain" />
-      </div>
-      <div class="mt-4">
-        <h3 class="font-semibold text-lg">Team Cobra Cushions</h3>
-        <p class="text-sm text-gray-600">£10.99</p>
-      </div>
-    </div>
+<!-- Dynamic Featured Items Script -->
+<script>
+  function getRandomItems(arr, n) {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, n);
+  }
 
-  </div>
-</section>
+  fetch('products.json')
+    .then(res => res.json())
+    .then(data => {
+      const featured = getRandomItems(data, 3);
+      const container = document.getElementById('featured-items');
 
-  </main>
-  <footer class="bg-black text-white text-center py-6">
-    <p>&copy; Cobracut 2025 – All rights reserved</p>
-  </footer>
+      featured.forEach(product => {
+        const div = document.createElement('div');
+        div.className = "border rounded-lg shadow-sm w-full h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg";
+        div.innerHTML = `
+          <div class="flex-grow flex items-center justify-center">
+            <img src="${product.image}" alt="${product.name}" class="max-h-40 object-contain" />
+          </div>
+          <div class="mt-4">
+            <h3 class="font-semibold text-lg">${product.name}</h3>
+            <p class="text-sm text-gray-600">£${product.price.toFixed(2)}</p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    })
+    .catch(err => {
+      console.error("Failed to load featured items:", err);
+    });
+</script>
+
 </body>
 </html>
