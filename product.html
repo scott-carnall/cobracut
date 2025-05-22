@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: white;
+      color: #111;
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: black;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header img {
+      height: 60px;
+      object-fit: contain;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .product-image {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .price {
+      font-size: 1.25rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    select {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      width: 100%;
+      max-width: 200px;
+      cursor: pointer;
+    }
+    button.add-to-cart {
+      background-color: black;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button.add-to-cart:hover {
+      background-color: #222;
+    }
+    .description {
+      margin-top: 1rem;
+      line-height: 1.5;
+      font-size: 1rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<header class="bg-black text-white p-4 flex justify-between items-center">
+  <a href="index.html" class="h-20">
+    <img src="assets/images/logo.png" alt="Cobracut Logo" class="h-20 object-contain" />
+  </a>
+  <nav class="space-x-4 flex items-center">
+    <a href="index.html" class="hover:underline">Home</a>
+	<a href="about.html" class="hover:underline">About Us</a>
+    <a href="contact.html" class="hover:underline">Contact</a>
+    <a href="faq.html" class="hover:underline">FAQ</a>
+	<a href="shop.html" class="hover:underline">Shop</a>
+    <!-- Cart Icon with link -->
+    <a href="cart.html" class="relative inline-block">
+      <!-- Heroicon: Shopping Cart -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-6-4a2 2 0 100 4 2 2 0 000-4z" />
+      </svg>
+      <!-- Optional: Cart Count -->
+      <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+    </a>
+  </nav>
+</header>
+
+<main>
+  <img id="product-image" src="" alt="Product Image" class="product-image" />
+  <h1 id="product-name">Loading...</h1>
+  <p class="price" id="product-price"></p>
+
+  <label for="size-select" id="size-label" style="display:none; font-weight:600;">Select Size:</label>
+  <select id="size-select" style="display:none;"></select>
+
+  <button class="add-to-cart" id="add-to-cart-btn">Add to Cart</button>
+
+  <p class="description" id="product-description"></p>
+</main>
+
+<script>
+  const cartKey = "cobracut-cart";
+
+  function loadCart() {
+    return JSON.parse(localStorage.getItem(cartKey)) || [];
+  }
+  function saveCart(cart) {
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+  }
+
+  // Get product ID from URL query string
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get("id");
+
+  const sizeEligibleIds = ["1", "2"]; // IDs that get size dropdown (jersey & tee)
+  const sizesAvailable = ["Small", "Medium", "Large", "XL", "2XL", "3XL", "4XL"];
+
+  async function fetchProducts() {
+    try {
+      const res = await fetch("products.json");
+      if (!res.ok) throw new Error("Failed to fetch products.json");
+      return await res.json();
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
+
+  function addToCart(product, size, qty = 1) {
+    let cart = loadCart();
+    const existing = cart.find(item => item.id === product.id && item.size === size);
+    if (existing) {
+      existing.quantity += qty;
+    } else {
+      cart.push({ id: product.id, name: product.name, price: product.price, size: size, quantity: qty });
+    }
+    saveCart(cart);
+    alert(`Added ${product.name} (${size || "One Size"}) to cart!`);
+  }
+
+  async function init() {
+    if (!productId) {
+      document.getElementById("product-name").textContent = "Product not found.";
+      return;
+    }
+
+    const products = await fetchProducts();
+    if (!products) {
+      document.getElementById("product-name").textContent = "Failed to load products.";
+      return;
+    }
+
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+      document.getElementById("product-name").textContent = "Product not found.";
+      return;
+    }
+
+    // Populate product info
+    document.getElementById("product-name").textContent = product.name;
+    document.getElementById("product-price").textContent = `£${product.price.toFixed(2)}`;
+    document.getElementById("product-description").textContent = product.description;
+    const img = document.getElementById("product-image");
+    img.src = product.image;
+    img.alt = product.name;
+
+    // Show size dropdown only for eligible products
+    if (sizeEligibleIds.includes(product.id)) {
+      const sizeSelect = document.getElementById("size-select");
+      const sizeLabel = document.getElementById("size-label");
+      sizeSelect.style.display = "inline-block";
+      sizeLabel.style.display = "block";
+
+      sizeSelect.innerHTML = sizesAvailable.map(size => `<option value="${size}">${size}</option>`).join("");
+    }
+  }
+
+  document.getElementById("add-to-cart-btn").addEventListener("click", () => {
+    fetchProducts().then(products => {
+      const product = products.find(p => p.id === productId);
+      if (!product) {
+        alert("Product not found.");
+        return;
+      }
+      let size = null;
+      if (sizeEligibleIds.includes(product.id)) {
+        const sizeSelect = document.getElementById("size-select");
+        size = sizeSelect.value;
+      }
+      addToCart(product, size, 1);
+    });
+  });
+
+  init();
+</script>
+
+</body>
+</html>

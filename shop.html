@@ -2,9 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shop - Cobracut</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    .product-card {
+      width: 14rem;
+      height: 24rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .image-container {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+    }
+    .image-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      margin: 0 auto;
+      display: block;
+    }
+  </style>
 </head>
 <body class="bg-white text-gray-900">
 
@@ -13,10 +47,16 @@
     <a href="index.html" class="h-20">
       <img src="assets/images/logo.png" alt="Cobracut Logo" class="h-20 object-contain" />
     </a>
-    <nav class="space-x-4">
-      <a href="index.html">Home</a>
-      <a href="shop.html">Shop</a>
-      <a href="cart.html">Cart</a>
+    <nav class="space-x-4 flex items-center">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="shop.html" class="hover:underline">Shop</a>
+      <a href="cart.html" class="relative inline-block" title="View Cart">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-6-4a2 2 0 100 4 2 2 0 000-4z" />
+        </svg>
+        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+      </a>
     </nav>
   </header>
 
@@ -41,71 +81,92 @@
   </section>
 
   <script>
-    const queryParams = new URLSearchParams(window.location.search);
-    let selectedTeam = queryParams.get("team") || "Cobracut";
+    const cartKey = "cobracut-cart";
 
-    document.getElementById("team-select").value = selectedTeam;
-
-    function loadProducts(team) {
-      fetch("products.json")
-        .then(res => res.json())
-        .then(products => {
-          const grid = document.getElementById("product-grid");
-          const title = document.getElementById("team-title");
-          title.textContent = `Shop: ${team}`;
-          grid.innerHTML = ""; // Clear previous items
-
-          const filtered = products.filter(p => p.team === team);
-
-          if (filtered.length === 0) {
-            grid.innerHTML = `
-              <div class="text-center text-gray-600 w-full">
-                <p>No items available for this team yet.</p>
-                <img src="assets/images/coming-soon.jpg" alt="Coming Soon" class="mx-auto mt-4 max-w-xs opacity-70" />
-              </div>
-            `;
-            return;
-          }
-
-          filtered.forEach(product => {
-            const card = document.createElement("div");
-            card.className = "border rounded-lg shadow-sm w-56 h-80 p-4 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-lg";
-            card.innerHTML = `
-              <div class="flex-grow flex items-center justify-center">
-                <img src="${product.image}" alt="${product.name}" class="max-h-40 object-contain" />
-              </div>
-              <div class="mt-4">
-                <h3 class="font-semibold text-lg">${product.name}</h3>
-                <p class="text-sm text-gray-600">£${product.price.toFixed(2)}</p>
-              </div>
-            `;
-            grid.appendChild(card);
-          });
-
-          // Add placeholder cards if less than 5
-          if (filtered.length < 5) {
-            for (let i = filtered.length; i < 5; i++) {
-              const placeholder = document.createElement("div");
-              placeholder.className = "border rounded-lg shadow-sm w-56 h-80 p-4 flex flex-col justify-center items-center text-gray-400 bg-gray-100";
-              placeholder.innerHTML = `
-                <p class="text-center">More<br>Coming Soon</p>
-              `;
-              grid.appendChild(placeholder);
-            }
-          }
-        })
-        .catch(() => {
-          document.getElementById("product-grid").innerHTML = "<p class='text-red-600'>Failed to load products.</p>";
-        });
+    function loadCart() {
+      return JSON.parse(localStorage.getItem(cartKey)) || [];
     }
 
-    // Handle dropdown change
-    document.getElementById("team-select").addEventListener("change", function () {
-      const team = this.value;
-      window.location.href = `shop.html?team=${team}`;
+    function saveCart(cart) {
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = loadCart();
+      const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+      document.getElementById("cart-count").textContent = count;
+    }
+
+    let currentProducts = [];
+    let selectedTeam = new URLSearchParams(window.location.search).get("team") || "Cobracut";
+
+    document.getElementById("team-select").value = selectedTeam;
+    document.getElementById("team-title").textContent = `Shop: ${selectedTeam}`;
+
+    async function fetchProducts() {
+      try {
+        const res = await fetch("products.json");
+        if (!res.ok) throw new Error("Failed to fetch products");
+        const products = await res.json();
+        return products;
+      } catch (e) {
+        document.getElementById("product-grid").innerHTML = "<p class='text-red-600'>Failed to load products.</p>";
+        return [];
+      }
+    }
+
+    function renderProductCards(products) {
+      const grid = document.getElementById("product-grid");
+      grid.innerHTML = "";
+
+      const filtered = products.filter(p => p.team === selectedTeam);
+      currentProducts = products;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="text-center text-gray-600 w-full">
+            <p>No items available for this team yet.</p>
+            <img src="assets/images/coming-soon.jpg" alt="Coming Soon" class="mx-auto mt-4 max-w-xs opacity-70" />
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        card.innerHTML = `
+          <div class="image-container">
+            <a href="product.html?id=${product.id}" class="block w-full h-full">
+              <img src="${product.image}" alt="${product.name}" />
+            </a>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg">${product.name}</h3>
+            <p class="text-sm text-gray-600">£${product.price.toFixed(2)}</p>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById("team-select").addEventListener("change", (e) => {
+      selectedTeam = e.target.value;
+      document.getElementById("team-title").textContent = `Shop: ${selectedTeam}`;
+      fetchProducts().then(products => {
+        renderProductCards(products);
+      });
     });
 
-    loadProducts(selectedTeam);
+    // Initial load
+    fetchProducts().then(products => {
+      currentProducts = products;
+      renderProductCards(products);
+      updateCartCount();
+    });
   </script>
 
 </body>
