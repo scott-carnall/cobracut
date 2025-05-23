@@ -119,7 +119,7 @@
 </main>
 
 <script>
-  const cartKey = "cobracut-cart";
+  const cartKey = "cart"; // ✅ Same key used in cart.html
 
   function loadCart() {
     return JSON.parse(localStorage.getItem(cartKey)) || [];
@@ -128,11 +128,10 @@
     localStorage.setItem(cartKey, JSON.stringify(cart));
   }
 
-  // Get product ID from URL query string
   const params = new URLSearchParams(window.location.search);
   const productId = params.get("id");
 
-  const sizeEligibleIds = ["1", "2"]; // IDs that get size dropdown (jersey & tee)
+  const sizeEligibleIds = ["1", "2"]; // IDs that get size dropdown
   const sizesAvailable = ["Small", "Medium", "Large", "XL", "2XL", "3XL", "4XL"];
 
   async function fetchProducts() {
@@ -146,16 +145,16 @@
     }
   }
 
-  function addToCart(product, size, qty = 1) {
+  function addToCart(id, size = null, qty = 1) {
     let cart = loadCart();
-    const existing = cart.find(item => item.id === product.id && item.size === size);
+    const existing = cart.find(item => item.id === id && item.size === size);
     if (existing) {
       existing.quantity += qty;
     } else {
-      cart.push({ id: product.id, name: product.name, price: product.price, size: size, quantity: qty });
+      cart.push({ id, quantity: qty, ...(size ? { size } : {}) });
     }
     saveCart(cart);
-    alert(`Added ${product.name} (${size || "One Size"}) to cart!`);
+    alert("Item added to cart!");
   }
 
   async function init() {
@@ -176,7 +175,6 @@
       return;
     }
 
-    // Populate product info
     document.getElementById("product-name").textContent = product.name;
     document.getElementById("product-price").textContent = `£${product.price.toFixed(2)}`;
     document.getElementById("product-description").textContent = product.description;
@@ -184,35 +182,31 @@
     img.src = product.image;
     img.alt = product.name;
 
-    // Show size dropdown only for eligible products
     if (sizeEligibleIds.includes(product.id)) {
       const sizeSelect = document.getElementById("size-select");
       const sizeLabel = document.getElementById("size-label");
       sizeSelect.style.display = "inline-block";
       sizeLabel.style.display = "block";
-
       sizeSelect.innerHTML = sizesAvailable.map(size => `<option value="${size}">${size}</option>`).join("");
     }
   }
 
-  document.getElementById("add-to-cart-btn").addEventListener("click", () => {
-    fetchProducts().then(products => {
-      const product = products.find(p => p.id === productId);
-      if (!product) {
-        alert("Product not found.");
-        return;
-      }
-      let size = null;
-      if (sizeEligibleIds.includes(product.id)) {
-        const sizeSelect = document.getElementById("size-select");
-        size = sizeSelect.value;
-      }
-      addToCart(product, size, 1);
-    });
+  document.getElementById("add-to-cart-btn").addEventListener("click", async () => {
+    const products = await fetchProducts();
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+      alert("Product not found.");
+      return;
+    }
+
+    let size = null;
+    if (sizeEligibleIds.includes(product.id)) {
+      size = document.getElementById("size-select").value;
+    }
+
+    addToCart(product.id, size, 1);
   });
 
   init();
 </script>
-
-</body>
 </html>
